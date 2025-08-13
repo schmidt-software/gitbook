@@ -1,4 +1,4 @@
-name: Staging
+name: Production
 on:
     push:
         branches:
@@ -7,10 +7,10 @@ env:
     NPM_TOKEN_READONLY: ${{ secrets.NPM_TOKEN_READONLY }}
 jobs:
     deploy-v2-vercel:
-        name: Deploy v2 to Vercel (staging)
+        name: Deploy v2 to Vercel (production)
         runs-on: ubuntu-latest
         environment: 
-            name: 2v-staging
+            name: 2v-production
             url: ${{ steps.deploy.outputs.deployment-url }}
         outputs:
             deployment-url: ${{ steps.deploy.outputs.deployment-url }}
@@ -21,17 +21,17 @@ jobs:
               id: deploy
               uses: ./.github/composite/deploy-vercel
               with:
-                environment: staging
+                environment: production
                 vercelOrg: ${{ secrets.VERCEL_ORG_ID }}
                 vercelProject: ${{ secrets.VERCEL_PROJECT_ID }}
                 vercelToken: ${{ secrets.VERCEL_TOKEN }}
-                opItem: op://gitbook-open/2v-staging
+                opItem: op://gitbook-open/2v-production
                 opServiceAccount: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
     deploy-v2-cloudflare:
-        name: Deploy v2 to Cloudflare Worker (staging)
+        name: Deploy v2 to Cloudflare Worker (production)
         runs-on: ubuntu-latest
         environment: 
-            name: 2c-staging
+            name: 2c-production
             url: ${{ steps.deploy.outputs.deployment-url }}
         outputs:
             deployment-url: ${{ steps.deploy.outputs.deployment-url }}
@@ -42,11 +42,11 @@ jobs:
               id: deploy
               uses: ./.github/composite/deploy-cloudflare
               with:
-                  environment: staging
+                  environment: production
                   deploy: true
                   apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                   accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-                  opItem: op://gitbook-open/2c-staging
+                  opItem: op://gitbook-open/2c-production
                   opServiceAccount: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
                   commitTag: main
                   commitMessage: ${{ github.sha }}
